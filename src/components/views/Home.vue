@@ -98,8 +98,7 @@ line-height: 100vh;
 <script>
 import Breadcrumb from '@/components/views/Breadcrumb'
 
-// import {mapGetters} from 'vuex'
-// var echarts = require('echarts')
+
 
 export default{
   name:'Home',

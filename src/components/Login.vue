@@ -57,7 +57,7 @@
       <el-form-item label="类型" >
         <el-select v-model="form.type" placeholder="请选择用户类型" style="width: auto">
           <el-option label="用户" value="1"></el-option>
-          <el-option label="评委" value="2"></el-option>
+          <el-option label="评委" value="3"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item v-if="form.type==2" label="专业" >
@@ -148,11 +148,17 @@
               console.error(successResponse)
               this.userId=successResponse.data.id
               _this.$store.commit('save',this.userId)
-              _this.$store.commit('login', _this.loginForm)
+              _this.$store.commit('login', successResponse.data)
 
               var path = this.$route.query.redirect
               console.log(path);
-              this.$router.replace({path: path === '/' || path === undefined ? '/product/productCount' : path})
+              switch (successResponse.data.type) {
+                case 1:this.$router.replace({path: path === '/' || path === undefined ? '/user/productShow' : path});break;
+                case 2:this.$router.replace({path: path === '/' || path === undefined ? '/product/productCount' : path});break;
+                case 3:this.$router.replace({path: path === '/' || path === undefined ? '/user/productShow' : path});break;
+
+              }
+
             }else{
               this.$message({
                 message:'账号、密码或用户类型错误！',

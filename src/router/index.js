@@ -10,8 +10,52 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Login',
+      name: 'Login2',
       component:Login
+    },
+    {
+      path:'/audit/auditMain',
+      name:'评委页面',
+      component:()=>import('@/components/common/AuditMain'),
+      children:[
+        {
+          path:'/audit/userCenter',
+          name:'评委用户中心',
+          component:()=>import('@/components/common/UserCenter')
+        }, {
+          path:'/audit/productScore',
+          name:'评委评分',
+          component:()=>import('@/components/common/ProductScore')
+        },
+        {
+          path:'/audit/userMessageList',
+          name:'留言列表',
+          component:()=>import('@/components/common/UserMessageList')
+        },]
+    },
+    {
+      path:'/user/userMain',
+      name:'用户页面',
+      component:()=>import('@/components/common/UserMain'),
+      children:[
+        {
+          path:'/user/userCenter',
+          name:'用户中心',
+          component:()=>import('@/components/common/UserCenter')
+        }, {
+          path:'/user/userProduct',
+          name:'用户查看产品',
+          component:()=>import('@/components/common/UserProductList')
+        },{
+          path:'/user/productShow',
+          name:'产品展示页',
+          component:()=>import('@/components/common/ProductShow')
+        },
+        {
+          path:'/user/userMessageList',
+          name:'留言列表',
+          component:()=>import('@/components/common/UserMessageList')
+        },]
     },
     {
       path: '/login',
@@ -56,6 +100,7 @@ export default new Router({
           name:'评委列表',
           component:()=>import('@/components/common/AuditList')
         },
+
          {
           path:'/message/messagelist',
           name:'留言列表',
@@ -66,6 +111,7 @@ export default new Router({
           name:'用户列表',
           component:()=>import('@/components/common/UserList')
         },
+
       ]}
   ]
 })

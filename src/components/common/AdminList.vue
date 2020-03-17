@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <div class="select"><el-card class="box-card" style="height: auto">
       <div><i class="el-icon-search"></i><span style="margin: 10px">筛选搜索</span></div>
@@ -28,7 +29,7 @@
       </el-form>
     </el-card></div>
 
-
+    <el-button v-if="this.user==7" type="success" style="height:40px;width: 66px; margin-bottom: 10px" @click="dialogFormVisible = true">添加</el-button>
   <el-table
     :data="tableData"
     height="100vh"
@@ -40,10 +41,7 @@
   </el-table-column>
   <el-table-column prop="phoneNum" label="电话号码" >
   </el-table-column>
-    <el-table-column prop="age" label="年龄" >
-    </el-table-column>
-    <el-table-column prop="genderDesc" label="性别" >
-    </el-table-column>
+
     <el-table-column prop="statusDesc" label="用户状态" >
     </el-table-column>
     <el-table-column prop="createTimeDesc" label="创建时间">
@@ -61,7 +59,33 @@
 
     </el-table-column>
 
-</el-table></div>
+</el-table>
+
+
+    <el-dialog title="添加管理员账号" :visible.sync="dialogFormVisible" :modal-append-to-body='false' width="500px" center="">
+      <el-form :model="form" label-width="110px" ref="form" >
+        <el-form-item label="用户名" prop="userName" >
+          <el-input v-model="form.userName" autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+        <el-form-item label="账号" prop="loginAccount">
+          <el-input v-model="form.loginAccount" autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="form.password" autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="phoneNum">
+          <el-input type="tel" v-model="form.phoneNum" autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="register">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
+
+
+
 </template>
 
 <script>
@@ -91,17 +115,24 @@
         TypeList:[{
 
         }], //用来接收从接口中获取出来的值
-
+        form:{
+          userName: '',
+          loginAccount: '',
+          password: '',
+          phoneNum: '',
+          type:2
+        },
         modification:false,
         dialogVisible: false,
         dialogImageUrl: '',
-
+        dialogTableVisible: false,
+        dialogFormVisible: false,
+        user:0
       }
-
     },
     created(){
-      this.mounted();
 
+      this.user = window.localStorage.getItem("userId")
     },
     mounted(){
       var that = this;
@@ -117,6 +148,7 @@
         .catch(failResponse => {
 
         })
+
     },
     methods:{
       changeStatus(id,status){
@@ -128,7 +160,13 @@
         })
 
       },
-
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
       //点击取消按钮 dom元素中的事务回滚
       callOff(){
         this.modification=false
@@ -187,31 +225,48 @@
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
-      //上传的文件个数超出设定时触发的函数
-      onExceed(files, fileList) {
-        this.$message({
-          type: 'info',
-          message: '最多只能上传一个图片',
-          duration: 2000
-        });
+      resetRegister(){
+        this.form()
       },
-      //文件上传前的前的钩子函数
-      //参数是上传的文件，若返回false，或返回Primary且被reject，则停止上传
-      beforeUpload(file){
-        const isJPG = file.type === 'image/jpeg';
-        const isGIF = file.type === 'image/gif';
-        const isPNG = file.type === 'image/png';
-        const isBMP = file.type === 'image/bmp';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG && !isGIF && !isPNG && !isBMP) {
-          alert('上传图片必须是JPG/GIF/PNG/BMP 格式!');
-        }
-        if (!isLt2M) {
-          alert('上传图片大小不能超过 2MB!');
-        }
-        return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
-      },
+      register(){
+        var _this = this
+        this.$axios
+          .post('/user/register', this.$qs.stringify({
+            userName:  this.form.userName,
+            loginAccount:  this.form.loginAccount,
+            password:  this.form.password,
+            phoneNum:  this.form.phoneNum,
+            age:  this.form.age,
+            gender:  this.form.gender,
+            profession: this.form.profession,
+            type: this.form.type
+          }))
+          .then(successResponse => {
+            if(successResponse.status!=200){
+              this.$message({
+                message:'注册失败！',
+                type:'error'
+              });
+              this.dialogFormVisible = false
+              this.$refs['form'].resetFields();
+            }
+            if (successResponse.data) {
+              this.$message('注册成功');
+              this.submitForm();
+              this.dialogFormVisible = false
+              this.$refs['form'].resetFields();
+            }else{
+              this.$message({
+                message:'注册失败！',
+                type:'error'
+              });
+              this.dialogFormVisible = false
+              this.$refs['form'].resetFields();
+            }
+          })
+          .catch(failResponse => {
+          })
+      }
     }
   };
 </script>
