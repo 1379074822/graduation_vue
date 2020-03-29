@@ -21,7 +21,7 @@
           <div class="text item" style="font-size: 20px;margin-left: 230px">
             类别：{{userInfo.type==1?"用户":userInfo.type==2?"管理员":"评委"}}
           </div>
-
+          <div class="text item" v-if="userInfo.type==3" style="font-size: 20px;margin-left: 230px">职称：{{userInfo.level}}</div>
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="密码修改">
@@ -74,7 +74,7 @@
       </el-tab-pane>
 
     </el-tabs>
-    <el-dialog title="添加管理员账号" :visible.sync="dialogFormVisible" :modal-append-to-body='false' width="500px" center="">
+    <el-dialog title="修改个人信息" :visible.sync="dialogFormVisible" :modal-append-to-body='false' width="500px" center="">
       <el-form :model="userInfo" label-width="110px" ref="form" >
         <el-form-item label="用户名" prop="userName" >
           <el-input v-model="userInfo.userName" autocomplete="off" style="width: auto"></el-input>
@@ -84,6 +84,9 @@
         </el-form-item>
         <el-form-item label="联系电话" prop="phoneNum" >
           <el-input v-model="userInfo.phoneNum"  autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+        <el-form-item v-if="userInfo.type==3" label="职称" prop="level" >
+          <el-input v-model="userInfo.level"  autocomplete="off" style="width: auto"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="gender" >
           <el-select v-model="userInfo.gender" placeholder="请选择">
@@ -95,11 +98,21 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item v-if="userInfo.type==3" label="专业" >
+          <el-select v-model="userInfo.profession" placeholder="请选择专业类型" style="width: auto">
+            <el-option label="理论" value="1"></el-option>
+            <el-option label="新闻" value="2"></el-option>
+            <el-option label="出版" value="3"></el-option>
+            <el-option label="文艺" value="4"></el-option>
+            <el-option label="文化经营管理" value="5"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
+
     </el-dialog>
 
     <el-dialog title="上传新作品" :visible.sync="dialogWorksVisible" :modal-append-to-body='false ' width="500px" center="" @close="dialogClose">
@@ -110,7 +123,7 @@
         <el-form-item label="上传图片(单次一张)" prop="fileUrl">
           <el-upload
             v-model="worksFrom.fileUrl"
-            action="http://localhost:8081/works/upload"
+            action="http://47.103.29.16:8081/works/upload"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"

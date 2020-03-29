@@ -1,82 +1,145 @@
 <template>
-<div>
-  <H3>最新作品</H3>
-  <el-carousel align="center" :interval="4000" type="card" height="300px">
-    <el-carousel-item v-for="item in imageList" :key="item">
-      <img style="width: 400px;height:300px" class="carousel-image" :src="item" />
-    </el-carousel-item>
-  </el-carousel>
-  <H3>优秀作品展示</H3>
-  <el-row>
-    <el-col :span="6" v-for="item in highScore" :key="item" :offset="index > 0 ? 2 : 0" style="margin-left: 80px">
-      <el-card :body-style="{ padding: '0px' }">
-        <img align="center" style="width: 250px;height:250px"  :src="item.fileUrl" class="image">
-        <div style="padding: 14px;">
-          <span>作品名：{{item.worksName}}</span><br/>
-          <span>作品介绍：{{item.worksDesc}}</span><br/>
-          <span>总得分：{{item.score}}</span><br/>
-          <div class="bottom clearfix">
-            <time class="time">创建时间: {{item.createTimeDesc}}</time>
-          </div>
+  <div>
+    <el-table
+      :data="tableData"
+      style="width: 100%;overflow:auto"
+      height="600"
+      v-infinite-scroll="load"
+    >
+      <el-table-column
+        prop="worksName"
+        label="作品名"
+        width="auto">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="作品"
+        width="auto">
+        <template slot-scope="scope">
+          <img :src="scope.row.fileUrl" alt="错误" height="100px" width="100px">
+        </template>
+
+      </el-table-column>
+      <el-table-column
+        prop="worksDesc"
+        label="作品介绍"
+        width="auto">
+      </el-table-column>
+      <el-table-column
+        prop="createName"
+        label="作者"
+        width="auto">
+      </el-table-column>
+      <el-table-column
+        prop="createTimeDesc"
+        label="提交时间"
+        width="auto">
+      </el-table-column>
+      <el-table-column
+
+        label="操作"
+        width="100">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="score(scope.row)">评分</el-button>
+        </template>
+      </el-table-column>
+
+    </el-table>
+    <el-dialog title="作品评分" :visible.sync="dialogFormVisible" :modal-append-to-body='false' width="500px" center="">
+      <el-form :model="scoreForm" label-width="110px" ref="form" >
+        <el-form-item label="作品名" prop="worksName" >
+          <el-input disabled=true v-model="scoreForm.worksName" autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+        <el-form-item label="评分" prop="score" >
+        <div class="block">
+          <span class="demonstration">评分</span>
+          <el-rate
+            v-model="value2"
+            :colors="colors">
+          </el-rate>
         </div>
-      </el-card>
-    </el-col>
-  </el-row>
-</div>
+        </el-form-item>
+        <el-form-item label="评分意见" prop="opinion" >
+          <el-input type="textarea" v-model="scoreForm.opinion"   autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
   export default {
-    inject:['reload'],
     data() {
       return {
-        imageList:[
-          "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2465691165,596834055&fm=26&gp=0.jpg",
-          "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1584355379801&di=9cfd572b7c914a24d20d1ced964b05df&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F16%2F11%2F12%2F9f5eeec66d799f7a6e0d80ab19299b46.jpg",
-          "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1584355379798&di=f156ab2ae95e7ec4bb788cb3e4d69b73&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F17%2F08%2F06%2F5f6be0f195024eabd6c14a5cbf5f809e.jpg%2521%2Ffwfh%2F804x804%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue",
-          "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1584355379797&di=ac4f299a56b17c89e3b85101a92cebfe&imgtype=0&src=http%3A%2F%2Fimg010.hc360.cn%2Fhb%2FMTQ1OTg3MzA2NzMzMC0xMTI1MTkwNDUz.jpg"
+        tableData: [],
+        dialogFormVisible:false,
+        value2:'',
+        colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+        scoreForm:{
+          worksName:'',
+          opinion:'',
 
-        ],
-        highScore:[],
-        currentDate: new Date()
+        },
+        worksId:'',
       }
 
     },
-    created(){
+    created() {
       this.mounted();
 
     },
-    mounted(){
-      this.$axios
-        .post('/works/getNew', {    //初始化页面时，按动态查询条件都为空
-
-        })
-        .then(successResponse => {
-
-            this.imageList=successResponse.data
-
-        })
-        .catch(failResponse => {
-
-        })
-
-      this.$axios
-        .post('/works/getHighScore', {    //初始化页面时，按动态查询条件都为空
-
-        })
-        .then(successResponse => {
-console.log(successResponse)
-            this.highScore=successResponse.data
-
-        })
-        .catch(failResponse => {
-
-        })
+    mounted() {
+      this.getWorks()
     },
-    methods:{
-
+    methods: {
+      getWorks() {
+        this.$axios
+          .get('/works/getWorksUnScore?id=' + window.localStorage.getItem("userId"), {})
+          .then(successResponse => {
+            this.tableData = successResponse.data
+          })
+          .catch(failResponse => {
+          })
       },
-      //提交修改
+      submitForm(){
+        this.$axios
+          .post('/score/saveScore', {
+            batch:window.localStorage.getItem("batch"),
+            opinion:this.scoreForm.opinion,
+            raterId:window.localStorage.getItem("userId"),
+            rounds: window.localStorage.getItem("rounds"),
+            score: this.value2,
+            worksId: this.worksId
+          })
+          .then(successResponse => {
+            if(successResponse.status==200){
+              this.scoreForm.opinion=""
+                this.value2=""
+              this.dialogFormVisible=false
+              this.getWorks()
+            }
+
+          })
+          .catch(failResponse => {
+          })
+      },
+      score(data){
+        this.scoreForm.worksName=data.worksName
+        this.worksId = data.id
+        this.dialogFormVisible=true
+      },
+      cancel(){
+        this.scoreForm.opinion=""
+        this.value2=""
+        this.dialogFormVisible=false
+      }
+    },
+    //提交修改
 
   };
 </script>

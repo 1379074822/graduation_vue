@@ -14,24 +14,26 @@ export default new Router({
       component:Login
     },
     {
-      path:'/audit/auditMain',
+      path:'/user/userMain',
       name:'评委页面',
-      component:()=>import('@/components/common/AuditMain'),
+      component:()=>import('@/components/common/UserMain'),
       children:[
         {
-          path:'/audit/userCenter',
-          name:'评委用户中心',
-          component:()=>import('@/components/common/UserCenter')
-        }, {
-          path:'/audit/productScore',
+          path:'/user/productScore',
           name:'评委评分',
           component:()=>import('@/components/common/ProductScore')
         },
         {
-          path:'/audit/userMessageList',
-          name:'留言列表',
-          component:()=>import('@/components/common/UserMessageList')
-        },]
+          path:'/user/advance',
+          name:'晋级操作',
+          component:()=>import('@/components/common/Advance')
+        },
+        {
+          path:'/user/report',
+          name:'二次投票',
+          component:()=>import('@/components/common/Report')
+        },
+        ]
     },
     {
       path:'/user/userMain',

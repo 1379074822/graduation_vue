@@ -10,16 +10,23 @@ export default new Vuex.Store({
     },
     userId: {
       id: window.localStorage.getItem('userId') === "undefined" ||  window.localStorage.getItem('userId') ==  null? '' : JSON.parse(window.localStorage.getItem('userId')).id
+    },
+    batch: {
+      id: window.localStorage.getItem('batch') === "undefined" ||  window.localStorage.getItem('batch') ==  null?1 : window.localStorage.getItem('batch')
+    },
+    rounds: {
+      id: window.localStorage.getItem('rounds') === "undefined" ||  window.localStorage.getItem('rounds') ==  null? 1 : window.localStorage.getItem('rounds')
     }
   },
 
   mutations: {
     login(state, user) {
       state.user = user
-      if (user != null) {
 
+      if (user != null) {
         window.localStorage.setItem('user', JSON.stringify(user))
       }
+
     },
     save(state, userId) {
       state.userId = userId

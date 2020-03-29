@@ -25,7 +25,7 @@
     style="width: 100%;overflow:auto"
     v-infinite-scroll="load"
     >
-  <el-table-column prop="worksName" label="作品名" :index="productId"  >
+  <el-table-column prop="worksName" sortable label="作品名" :index="productId"  >
   </el-table-column>
   <el-table-column prop="worksDesc" label="作品介绍" >
   </el-table-column>
@@ -36,11 +36,11 @@
     </el-table-column>
     <el-table-column prop="worksDesc" label="作品介绍" >
     </el-table-column>
-    <el-table-column prop="score" label="作品得分" >
+    <el-table-column prop="score" sortable label="作品得分" >
     </el-table-column>
-    <el-table-column prop="statusDesc" label="作品状态" >
+    <el-table-column prop="statusDesc" sortable label="作品状态" >
     </el-table-column>
-    <el-table-column prop="createTimeDesc" label="创建时间">
+    <el-table-column prop="createTimeDesc" sortable label="创建时间">
     </el-table-column>
     <el-table-column prop="createName" label="创建人" >
     </el-table-column>

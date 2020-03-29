@@ -48,6 +48,9 @@
       <el-form-item label="年龄" >
         <el-input type="number" v-model="form.age" autocomplete="off" style="width: auto"></el-input>
       </el-form-item>
+      <el-form-item v-if="form.type==3" label="职称" >
+        <el-input  v-model="form.level" autocomplete="off" style="width: auto"></el-input>
+      </el-form-item>
       <el-form-item label="性别" >
         <el-select v-model="form.gender" placeholder="请选择性别" style="width: auto">
           <el-option label="男" value="1"></el-option>
@@ -60,12 +63,13 @@
           <el-option label="评委" value="3"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="form.type==2" label="专业" >
+      <el-form-item v-if="form.type==3" label="专业" >
         <el-select v-model="form.profession" placeholder="请选择专业类型" style="width: auto">
-          <el-option label="自然" value="1"></el-option>
-          <el-option label="地理" value="2"></el-option>
-          <el-option label="美学" value="3"></el-option>
-          <el-option label="科技" value="4"></el-option>
+          <el-option label="理论" value="1"></el-option>
+          <el-option label="新闻" value="2"></el-option>
+          <el-option label="出版" value="3"></el-option>
+          <el-option label="文艺" value="4"></el-option>
+          <el-option label="文化经营管理" value="5"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -90,7 +94,7 @@
         loginForm: {
           username: '',
           password: '',
-          type:''
+          type: '1'
         },
         form:{
           userName: '',
@@ -99,6 +103,7 @@
           phoneNum: '',
           age: '',
           gender: '',
+          level:'',
           profession: '',
           type: ''
         },
@@ -151,6 +156,15 @@
               _this.$store.commit('login', successResponse.data)
 
               var path = this.$route.query.redirect
+              this.$axios
+                .get('/config/getConfig', {    //初始化页面时，按动态查询条件都为空
+                })
+                .then(successResponse => {
+                  window.localStorage.setItem("batch",successResponse.data.batch)
+                })
+                .catch(failResponse => {
+
+                })
               console.log(path);
               switch (successResponse.data.type) {
                 case 1:this.$router.replace({path: path === '/' || path === undefined ? '/user/productShow' : path});break;
@@ -187,7 +201,8 @@
             age:  this.form.age,
             gender:  this.form.gender,
             profession: this.form.profession,
-            type: this.form.type
+            type: this.form.type,
+            ticket:3
           }))
           .then(successResponse => {
             if(successResponse.status!=200){

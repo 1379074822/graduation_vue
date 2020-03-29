@@ -44,7 +44,7 @@
 
     <el-table-column prop="statusDesc" label="用户状态" >
     </el-table-column>
-    <el-table-column prop="createTimeDesc" label="创建时间">
+    <el-table-column prop="createTimeDesc" sortable label="创建时间">
     </el-table-column>
     <el-table-column  label="操作" >
       <template slot-scope="scope">

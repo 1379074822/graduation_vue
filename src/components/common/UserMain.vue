@@ -10,19 +10,18 @@
           <el-menu-item v-if="loginUserType==1" @click="dialogFormVisible = true">作品上传</el-menu-item>
           <el-submenu index="" v-if="loginUserType==3">
             <template slot="title">评委操作</template>
-            <el-menu-item index="2-4-1">作品评分</el-menu-item>
-            <el-menu-item index="2-4-2">晋级操作</el-menu-item>
-            <el-menu-item index="2-4-3">评审报告</el-menu-item>
+            <el-menu-item index="/user/productScore">作品评分</el-menu-item>
+            <el-menu-item index="/user/advance">晋级操作</el-menu-item>
+            <el-menu-item index="/user/report">评审区</el-menu-item>
           </el-submenu>
         </el-submenu>
         <el-menu-item index="/user/userMessageList" style="width: auto;margin-left: 100px">留言板</el-menu-item>
         <el-menu-item index="/user/userCenter" style="width: auto;margin-left: 100px">个人中心</el-menu-item>
         <el-dropdown @command="handleCommand" style="float: right">
-          <el-avatar icon="el-icon-user-solid"></el-avatar>
-          <span>{{loginUserName}}</span>
+          <el-avatar  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar><span>{{loginUserName}}</span>
+
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="a">首页</el-dropdown-item>
-            <el-dropdown-item command="">个人中心</el-dropdown-item>
             <el-dropdown-item command="b">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -43,7 +42,7 @@
           <el-form-item label="上传图片(单次一张)" prop="fileUrl">
             <el-upload
               v-model="form.fileUrl"
-              action="http://localhost:8081/works/upload"
+              action="http://47.103.29.16:8081/works/upload"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
@@ -141,6 +140,12 @@
       this.loginUserType = JSON.parse(window.localStorage.getItem("user")).type
     },
     mounted() {
+      if (window.localStorage.getItem('batch') == null) {
+        window.localStorage.setItem('batch',1)
+      }
+      if (window.localStorage.getItem('rounds') == null) {
+        window.localStorage.setItem('rounds', 1)
+      }
     },
 
     methods: {
