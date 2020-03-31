@@ -32,6 +32,10 @@
           }
       },
       mounted(){
+          if( window.localStorage.getItem("rounds")==1){
+            this.$message('还未到达投票阶段');
+            this.$router.push("/user/advance")
+          }
        this.getHighRate()
         this.$axios
           .get('/config/getConfig', {    //初始化页面时，按动态查询条件都为空
@@ -81,6 +85,7 @@
             .then(successResponse => {
               console.log(successResponse)
               this.voteTime = successResponse.data.voteStatus
+              window.localStorage.setItem("rounds",3)
             })
             .catch(failResponse => {
 
@@ -88,14 +93,35 @@
         },
         startVote(){
           this.$axios
+            .post('/works/deleteGood', {    //初始化页面时，按动态查询条件都为空
+            })
+            .then(successResponse => {
+              this.getHighRate()
+            })
+            .catch(failResponse => {
+
+            })
+          this.$axios
             .post('/config/updateVote', {    //初始化页面时，按动态查询条件都为空
               id:1,
               voteStatus:1,
-              batch:window.localStorage.getItem("batch")+1
+              batch:1
             })
             .then(successResponse => {
               console.log(successResponse)
               this.voteTime = successResponse.data.voteStatus
+              window.localStorage.setItem("rounds",1)
+              window.localStorage.setItem("batch",1)
+              this.$router.push("/user/advance")
+            })
+            .catch(failResponse => {
+
+            })
+          this.$axios
+            .post('/user/init', {    //初始化页面时，按动态查询条件都为空
+            })
+            .then(successResponse => {
+
             })
             .catch(failResponse => {
 

@@ -12,6 +12,7 @@
   </el-steps>
 
   <el-button v-if="active==0" style="margin-top: 12px;margin-left: 140px;margin-top: 100px" @click="onSubmit">提交</el-button>
+  <el-button v-if="active!=0" style="margin-top: 12px;margin-left: 140px;margin-top: 100px" @click="goReport">前往评审区</el-button>
 </div>
 </template>
 
@@ -40,12 +41,15 @@
                   message: '已提交优秀作品数，请进行投票！',
                   type: 'success'
                 });
-               window.localStorage.setItem("rounds",window.localStorage.getItem("rounds")+1)
-                this.$router.push("/audit/report")
+               window.localStorage.setItem("rounds",2)
+                this.$router.push("/user/report")
               }
             })
             .catch(failResponse => {
             })
+        },
+        goReport(){
+          this.$router.push("/user/report")
         }
       }
     }

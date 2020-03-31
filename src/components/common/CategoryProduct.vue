@@ -88,7 +88,7 @@
       },
       mounted(){
         var that = this;
-        this.$axios.get('http://localhost:8081/category/findall')
+        this.$axios.get('http://47.103.29.16:8081/category/findall')
           .then(res => {
             if (res.data) {
               this.categoryTable=res.data

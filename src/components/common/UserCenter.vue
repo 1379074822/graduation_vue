@@ -5,10 +5,10 @@
         <span slot="label"> 个人信息</span>
         <el-card class="box-card"
 
-                 style="width: 80%;height: 500px;margin-left: 100px;">
+                 style="width: 80%;height: 700px;margin-left: 100px;">
           <div slot="header" class="clearfix">
 
-            <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">修改个人信息</el-button>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="changeInfo">修改个人信息</el-button>
           </div>
           <div class="text item" style="margin-top: 50px;font-size: 20px;margin-left: 230px">
             用户名：{{userInfo.userName}}
@@ -22,6 +22,8 @@
             类别：{{userInfo.type==1?"用户":userInfo.type==2?"管理员":"评委"}}
           </div>
           <div class="text item" v-if="userInfo.type==3" style="font-size: 20px;margin-left: 230px">职称：{{userInfo.level}}</div>
+          <div class="text item" v-if="userInfo.type==3" style="font-size: 20px;margin-left: 230px">工作业绩：{{userInfo.workPerform}}</div>
+          <div class="text item" v-if="userInfo.type==3" style="font-size: 20px;margin-left: 230px">研究成果：{{userInfo.researchResult}}</div>
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="密码修改">
@@ -107,6 +109,29 @@
             <el-option label="文化经营管理" value="5"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item v-if="userInfo.type==3" label="工作业绩" prop="workPerform" >
+          <el-input v-model="userInfo.workPerform"  autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+        <el-form-item v-if="userInfo.type==3" label="研究成果" prop="researchResult" >
+          <el-input v-model="userInfo.researchResult"  autocomplete="off" style="width: auto"></el-input>
+        </el-form-item>
+        <el-form-item v-if="userInfo.type==3" label="证书照片" prop="paperworks">
+          <el-upload
+            v-model="userInfo.paperworks"
+            action="http://47.103.29.16:8081/works/upload"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview2"
+            :on-remove="handleRemove2"
+            :on-success="onSuccess2"
+            :file-list = imgFileList2
+            accept="png;jpg;jpeg;"
+            >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible3">
+            <img  width="100%" :src="dialogImageUrl2" alt="">
+          </el-dialog>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -115,7 +140,7 @@
 
     </el-dialog>
 
-    <el-dialog title="上传新作品" :visible.sync="dialogWorksVisible" :modal-append-to-body='false ' width="500px" center="" @close="dialogClose">
+    <el-dialog title="修改作品" :visible.sync="dialogWorksVisible" :modal-append-to-body='false ' width="500px" center="" @close="dialogClose">
       <el-form v-model="worksFrom" label-width="110px">
         <el-form-item label="作品名"  prop="worksName">
           <el-input v-model="worksFrom.worksName" autocomplete="off" style="width: auto"></el-input>
@@ -174,6 +199,7 @@
         activeName: 'first',
         userInfo: {},
         imgFileList:[],
+        imgFileList2:[],
         dialogTableVisible: false,
         dialogFormVisible: false,
         dialogWorksVisible:false,
@@ -181,6 +207,7 @@
         loginType:'',
         dialogImageUrl: '',
         dialogVisible2: false,
+        dialogVisible3: false,
         form:{},
         worksFrom:{
         },
@@ -218,22 +245,40 @@
       dialogClose() {
         this.imgFileList=[];
       },
+      dialogClose2() {
+        this.imgFileList2=[];
+      },
       handleClick(tab, event) {
       },
       handleRemove(file, fileList) {
-
+        this.imgFileList = []
+      },
+      handleRemove2(file, fileList) {
+        this.imgFileList2 = []
+        this.userInfo.paperworks =[]
       },
       onSuccess(response, file, fileList){
+        console.log(response)
         this.form.fileUrl = response
+        this.worksFrom.fileUrl = response
         this.fileList = []
+      },
+      onSuccess2(response, file, fileList){
+        this.userInfo.paperworks.push(response)
+        this.fileList = []
+        console.log("===============", this.userInfo.paperworks)
       },
       handlePictureCardPreview(file) {
 
         this.dialogImageUrl = file.url;
         this.dialogVisible2 = true;
       },
+      handlePictureCardPreview2(file) {
+
+        this.dialogImageUrl2 = file.url;
+        this.dialogVisible3 = true;
+      },
       showWorks(data) {
-        console.log(data)
         this.dialogWorksVisible =true;
         this.checkedId=data.id;
         this.worksFrom=data;
@@ -241,8 +286,16 @@
         let obj = new Object();
         obj.url = data.fileUrl
         this.imgFileList.push(obj)
-        console.log(this.fileList)
-
+      },
+      changeInfo(){
+        this.getInfo()
+        this.dialogFormVisible = true
+        this.imgFileList2 = []
+        for (let i = 0; i < this.userInfo.paperworks.length; i++) {
+          let obj = new Object();
+          obj.url = this.userInfo.paperworks[i]
+          this.imgFileList2.push(obj)
+        }
       },
       changePassword(){
         this.$axios
@@ -328,7 +381,11 @@
             userName: this.userInfo.userName,
             phoneNum: this.userInfo.phoneNum,
             age:this.userInfo.age,
-            gender:this.userInfo.gender
+            gender:this.userInfo.gender,
+            profession:this.userInfo.profession,
+            workPerform:this.userInfo.workPerform,
+            researchResult:this.userInfo.researchResult,
+            paperworks:this.userInfo.paperworks
           })
           .then(successResponse => {
               this.getInfo()

@@ -10,7 +10,7 @@
     <el-form-item label="商品图片" prop="producticon"  >
       <el-upload v-model="addForm.producticon"
         ref="upload"
-        action="http://localhost:8081/product/upload"
+        action="http://47.103.29.16:8081/product/upload"
         name="picture"
         list-type="picture-card"
         :limit="1"

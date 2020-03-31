@@ -37,14 +37,14 @@
     style="width: 100%;overflow:auto"
     v-infinite-scroll="load"
     >
-  <el-table-column prop="userName" label="用户名"  >
+  <el-table-column sortable prop="userName" label="用户名"  >
   </el-table-column>
-  <el-table-column prop="phoneNum" label="电话号码" >
+  <el-table-column sortable prop="phoneNum" label="电话号码" >
   </el-table-column>
 
-    <el-table-column prop="statusDesc" label="用户状态" >
+    <el-table-column sortable prop="statusDesc" label="用户状态" >
     </el-table-column>
-    <el-table-column prop="createTimeDesc" sortable label="创建时间">
+    <el-table-column sortable prop="createTimeDesc" sortable label="创建时间">
     </el-table-column>
     <el-table-column  label="操作" >
       <template slot-scope="scope">

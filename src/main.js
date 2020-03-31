@@ -19,7 +19,7 @@ Vue.prototype.$echarts=echarts
 Vue.prototype.$qs=qs;
 var axios =require('axios')
 axios.defaults.baseURL='http://47.103.29.16:8081/'
-// axios.defaults.baseURL='http://localhost:8081/'
+// axios.defaults.baseURL='http://47.103.29.16:8081/'
 Vue.prototype.$axios=axios
 Vue.config.productionTip = false
 
