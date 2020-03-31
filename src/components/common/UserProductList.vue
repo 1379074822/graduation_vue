@@ -156,7 +156,7 @@
         window.open('about:blank', name, 'height=400, width=400, top=0, left=0, toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes,location=yes, status=yes');
       },
       exportList() {
-        window.open('http://47.103.29.16:8081/export/excel?worksName=' + this.ruleForm.worksName + "&createName=" + this.ruleForm.createName)
+        window.open('http://localhost:8081/export/excel?worksName=' + this.ruleForm.worksName + "&createName=" + this.ruleForm.createName)
       },
       //提交修改
       SubmitFrom() {

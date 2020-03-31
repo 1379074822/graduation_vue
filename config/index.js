@@ -9,8 +9,8 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',
-    // assetsPublicPath: '/',
+    // assetsPublicPath: './',
+    assetsPublicPath: '/',
     proxyTable: {
       // '/': {
       //   target: 'http://47.103.29.16:8081',
@@ -22,8 +22,8 @@ module.exports = {
       },
 
       // Various Dev Server settings
-      host: '0.0.0.0', // can be overwritten by process.env.HOST
-      // host: '127.0.0.1', // can be overwritten by process.env.HOST
+      // host: '0.0.0.0', // can be overwritten by process.env.HOST
+      host: '127.0.0.1', // can be overwritten by process.env.HOST
       port: 8099, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
       autoOpenBrowser: false,
       errorOverlay: true,

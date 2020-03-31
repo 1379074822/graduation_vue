@@ -201,13 +201,13 @@
           // + "&level=" + this.ruleForm.level==null?null:this.ruleForm.level+ "&profession=" + this.ruleForm.profession)
           this.open2()
         } else {
-          window.open('http://47.103.29.16:8081/export/userExcel?isTemplate=' + a)
+          window.open('http://localhost:8081/export/userExcel?isTemplate=' + a)
 
         }
       },
       open2(){
         var winHeight = window.document.documentElement.clientHeight-10;
-        var url = 'http://47.103.29.16:8081/export/userExcel';
+        var url = 'http://localhost:8081/export/userExcel';
 
         var formStr = '<form style="visibility:hidden;" method="POST" action="' + url + '">' +
           '<input type="hidden" name="profession" value="' + encodeURIComponent(this.ruleForm.profession == 0 ? 0 : this.ruleForm.profession) + '" />' +
@@ -227,7 +227,7 @@
          window.close()
       },
       open() {
-        var url = "'http://47.103.29.16:8081/export/userExcel";
+        var url = "'http://localhost:8081/export/userExcel";
         // 请求参数 postData
         var postData = {};
         postData.profession =this.ruleForm.profession == 0 ? 0 : this.ruleForm.profession;

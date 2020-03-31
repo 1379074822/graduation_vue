@@ -73,7 +73,7 @@
               })
         },
         exportReport(){
-          window.open('http://47.103.29.16:8081/export/getHigh?batch='+window.localStorage.getItem("batch"))
+          window.open('http://localhost:8081/export/getHigh?batch='+window.localStorage.getItem("batch"))
 
         },
         stopVote(){
